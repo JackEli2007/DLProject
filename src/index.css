@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-slate-900 dark:bg-app-dark dark:text-slate-100;
+    @apply transition-colors duration-200;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400 dark:bg-slate-600;
+  }
+
+  /* Focus ring utility */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-blue-500;
+  }
+}
+
+@layer components {
+  /* Signal wire animation */
+  .wire-active {
+    stroke: #22c55e;
+    stroke-dasharray: 8 4;
+    animation: wireFlow 0.8s linear infinite;
+  }
+  .wire-inactive {
+    stroke: #475569;
+  }
+
+  /* LED glow effect */
+  .led-high {
+    @apply bg-logic-high;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6), 0 0 20px rgba(34, 197, 94, 0.3);
+  }
+  .led-low {
+    @apply bg-logic-low;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6), 0 0 20px rgba(239, 68, 68, 0.3);
+  }
+
+  /* Timing diagram waveform */
+  .waveform-high {
+    @apply border-logic-high;
+  }
+  .waveform-low {
+    @apply border-logic-low;
+  }
+}
+
+@layer utilities {
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+@keyframes wireFlow {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -24; }
+}

@@ -1,0 +1,1116 @@
+/* ==========================================================================
+   1. CSS Variables (:root)
+   ========================================================================== */
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a1f2e;
+  --bg-card-hover: #242a3d;
+  --accent-purple: #8b5cf6;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --color-high: #22c55e;
+  --color-low: #ef4444;
+  --color-dontcare: #f59e0b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-color: #1e293b;
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --glow-green: 0 0 12px rgba(34,197,94,0.6);
+  --glow-red: 0 0 12px rgba(239,68,68,0.4);
+  --glow-purple: 0 0 15px rgba(139,92,246,0.3);
+}
+
+/* ==========================================================================
+   2. Reset & Base
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  scroll-behavior: smooth;
+}
+
+/* ==========================================================================
+   3. App Layout
+   ========================================================================== */
+#app {
+  display: flex;
+  min-height: 100vh;
+}
+
+#main-content {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  padding: 24px;
+  flex: 1;
+  width: calc(100% - var(--sidebar-width));
+}
+
+/* ==========================================================================
+   4. Header Styles
+   ========================================================================== */
+#app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  justify-content: space-between;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent-purple);
+}
+
+.header-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-high);
+  animation: pulse 2s infinite;
+}
+
+.status-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 101;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.menu-toggle.active span:nth-child(1) {
+  transform: translateY(10.5px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: translateY(-10.5px) rotate(-45deg);
+}
+
+/* ==========================================================================
+   5. Sidebar Styles
+   ========================================================================== */
+#sidebar {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--header-height));
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  z-index: 90;
+}
+
+.nav-items {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  background-color: var(--bg-card);
+  color: var(--accent-purple);
+  border-left-color: var(--accent-purple);
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+  width: 28px;
+  text-align: center;
+}
+
+#sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 89;
+}
+
+#sidebar-overlay.active {
+  display: block;
+}
+
+/* ==========================================================================
+   6. Module Visibility
+   ========================================================================== */
+.module {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.module.active {
+  display: block;
+  opacity: 1;
+}
+
+.module-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.module-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   7. Cards
+   ========================================================================== */
+.card {
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* ==========================================================================
+   8. Buttons
+   ========================================================================== */
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--accent-purple);
+  color: white;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: var(--glow-purple);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-purple);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   9. Dashboard
+   ========================================================================== */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.dash-card {
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dash-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-purple);
+  box-shadow: var(--glow-purple);
+}
+
+.dash-card .card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.dash-card .card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.dash-card .card-desc {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.learn-section {
+  margin-top: 32px;
+}
+
+.learn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.learn-item {
+  background-color: var(--bg-card);
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.learn-item .learn-icon {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.learn-item h4 {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.learn-item p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   10. Gate Selector
+   ========================================================================== */
+.gate-selector, .tt-gate-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.gate-btn, .tt-gate-btn {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.gate-btn:hover, .tt-gate-btn:hover {
+  border-color: var(--accent-purple);
+  color: var(--text-primary);
+}
+
+.gate-btn.active, .tt-gate-btn.active {
+  background-color: var(--accent-purple);
+  color: white;
+  border-color: var(--accent-purple);
+}
+
+/* ==========================================================================
+   11. Gate Workspace
+   ========================================================================== */
+#gate-workspace, .universal-workspace {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+}
+
+/* ==========================================================================
+   12. Input Controls & Switches
+   ========================================================================== */
+.input-controls {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  padding: 16px;
+  flex-wrap: wrap;
+}
+
+.input-group, #input-b-group, #universal-input-b-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-group label, #input-b-group label, #universal-input-b-group label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.switch-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.switch-track {
+  width: 52px;
+  height: 28px;
+  border-radius: 14px;
+  background-color: #374151;
+  position: relative;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.switch-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: all 0.3s ease;
+}
+
+.switch-btn.on .switch-track {
+  background-color: var(--color-high);
+  box-shadow: var(--glow-green);
+}
+
+.switch-btn.on .switch-thumb {
+  left: 27px;
+}
+
+#label-a, #label-b, #universal-label-a, #universal-label-b {
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+/* ==========================================================================
+   13. Circuit Display
+   ========================================================================== */
+.circuit-display {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  background: radial-gradient(circle at center, var(--bg-card-hover) 0%, var(--bg-card) 70%);
+  border-radius: 12px;
+}
+
+#gate-circuit-svg, #universal-circuit-svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   14. Output Display
+   ========================================================================== */
+.output-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+}
+
+#output-led, #universal-output-led {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  background-color: var(--color-low);
+  box-shadow: var(--glow-red);
+}
+
+#output-led.high, #universal-output-led.high {
+  background-color: var(--color-high);
+  box-shadow: var(--glow-green);
+}
+
+#output-led.low, #universal-output-led.low {
+  background-color: var(--color-low);
+  box-shadow: var(--glow-red);
+}
+
+#output-value, #universal-output-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+/* ==========================================================================
+   15. Simulation Controls
+   ========================================================================== */
+.sim-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 12px;
+  border-top: 1px solid var(--border-color);
+  margin-top: 16px;
+}
+
+/* ==========================================================================
+   16. Truth Tables
+   ========================================================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  padding: 10px 16px;
+  text-align: center;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+td {
+  padding: 10px 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+tr:hover {
+  background-color: var(--bg-card-hover);
+}
+
+tr.highlight-row {
+  background-color: rgba(139, 92, 246, 0.15);
+  border-left: 3px solid var(--accent-purple);
+}
+
+.val-1 {
+  color: var(--color-high);
+  font-weight: 700;
+}
+
+.val-0 {
+  color: var(--color-low);
+}
+
+/* ==========================================================================
+   17. Gate Info Panel
+   ========================================================================== */
+#gate-info-panel {
+  padding: 0;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.info-row label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.info-row span {
+  font-weight: 600;
+  font-family: monospace;
+}
+
+#gate-info-description {
+  margin-top: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   18. Universal Gate Module
+   ========================================================================== */
+.universal-type-btns {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.universal-impl-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.impl-btn {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.impl-btn:hover {
+  border-color: var(--accent-purple);
+  color: var(--text-primary);
+}
+
+.impl-btn.active {
+  background-color: var(--accent-purple);
+  color: white;
+  border-color: var(--accent-purple);
+}
+
+#btn-type-nand, #btn-type-nor {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+#btn-type-nand:hover, #btn-type-nor:hover {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+
+#btn-type-nand.active, #btn-type-nor.active {
+  background-color: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue);
+}
+
+/* ==========================================================================
+   19. K-Map Module
+   ========================================================================== */
+.kmap-controls {
+  margin-bottom: 24px;
+}
+
+.kmap-var-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.var-btn {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.var-btn:hover {
+  border-color: var(--accent-cyan);
+  color: var(--text-primary);
+}
+
+.var-btn.active {
+  background-color: var(--accent-cyan);
+  color: white;
+  border-color: var(--accent-cyan);
+}
+
+.kmap-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.input-field label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: monospace;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-field input:focus {
+  border-color: var(--accent-cyan);
+}
+
+.kmap-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kmap-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.kmap-grid-wrapper {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+/* ==========================================================================
+   20. K-Map Grid
+   ========================================================================== */
+#kmap-grid-container table {
+  width: auto;
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+#kmap-grid-container th {
+  background-color: var(--bg-secondary);
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  min-width: 48px;
+  border: none;
+}
+
+.kmap-cell {
+  width: 56px;
+  height: 56px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: monospace;
+  border-radius: 6px;
+  cursor: default;
+  transition: all 0.3s ease;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-card);
+  padding: 0;
+}
+
+.kmap-cell.is-one {
+  background-color: rgba(34,197,94,0.15);
+  color: var(--color-high);
+  border-color: rgba(34,197,94,0.4);
+}
+
+.kmap-cell.is-dontcare {
+  background-color: rgba(245,158,11,0.15);
+  color: var(--color-dontcare);
+  border-color: rgba(245,158,11,0.3);
+}
+
+.kmap-cell.is-zero {
+  color: var(--text-muted);
+}
+
+/* K-Map Group Colors */
+.group-0 { background-color: rgba(139,92,246,0.3); border-color: rgba(139,92,246,0.6); }
+.group-1 { background-color: rgba(59,130,246,0.3); border-color: rgba(59,130,246,0.6); }
+.group-2 { background-color: rgba(6,182,212,0.3); border-color: rgba(6,182,212,0.6); }
+.group-3 { background-color: rgba(34,197,94,0.3); border-color: rgba(34,197,94,0.6); }
+.group-4 { background-color: rgba(245,158,11,0.3); border-color: rgba(245,158,11,0.6); }
+.group-5 { background-color: rgba(239,68,68,0.3); border-color: rgba(239,68,68,0.6); }
+.group-6 { background-color: rgba(236,72,153,0.3); border-color: rgba(236,72,153,0.6); }
+.group-7 { background-color: rgba(168,85,247,0.3); border-color: rgba(168,85,247,0.6); }
+
+/* ==========================================================================
+   21. K-Map Results
+   ========================================================================== */
+#kmap-result {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#kmap-result.active {
+  display: flex;
+}
+
+.highlight-expr {
+  font-size: 1.3rem;
+  color: var(--accent-cyan);
+  font-family: monospace;
+  font-weight: 700;
+}
+
+#kmap-groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group-item {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background-color: var(--bg-secondary);
+  border-left: 4px solid var(--border-color);
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+/* Match list item left borders to group colors */
+.group-item.group-0 { border-left-color: rgba(139,92,246,1); }
+.group-item.group-1 { border-left-color: rgba(59,130,246,1); }
+.group-item.group-2 { border-left-color: rgba(6,182,212,1); }
+.group-item.group-3 { border-left-color: rgba(34,197,94,1); }
+.group-item.group-4 { border-left-color: rgba(245,158,11,1); }
+.group-item.group-5 { border-left-color: rgba(239,68,68,1); }
+.group-item.group-6 { border-left-color: rgba(236,72,153,1); }
+.group-item.group-7 { border-left-color: rgba(168,85,247,1); }
+
+#kmap-steps {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.step-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   22. Learn Module
+   ========================================================================== */
+.learn-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.learn-section.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  color: var(--accent-purple);
+}
+
+.learn-section p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+/* ==========================================================================
+   23. Toast Notifications
+   ========================================================================== */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  padding: 14px 20px;
+  border-radius: 8px;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-left: 4px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-size: 0.9rem;
+  animation: toastIn 0.3s ease;
+  min-width: 280px;
+  max-width: 400px;
+}
+
+.toast.success {
+  border-left-color: var(--color-high);
+}
+
+.toast.error {
+  border-left-color: var(--color-low);
+}
+
+.toast.info {
+  border-left-color: var(--accent-blue);
+}
+
+@keyframes toastIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.toast.toast-exit {
+  animation: toastOut 0.3s ease forwards;
+}
+
+@keyframes toastOut {
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* ==========================================================================
+   24. Utility Classes
+   ========================================================================== */
+.glow-high {
+  box-shadow: var(--glow-green) !important;
+}
+
+.glow-low {
+  box-shadow: var(--glow-red) !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.text-high {
+  color: var(--color-high);
+}
+
+.text-low {
+  color: var(--color-low);
+}
+
+/* ==========================================================================
+   25. Responsive Design
+   ========================================================================== */
+@media (max-width: 1024px) {
+  #gate-workspace, .universal-workspace {
+    grid-template-columns: 1fr;
+  }
+  
+  .kmap-display {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-cards {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: flex;
+  }
+  
+  #sidebar {
+    transform: translateX(-100%);
+    z-index: 90;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    height: calc(100vh - var(--header-height));
+  }
+  
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  
+  #sidebar-overlay.active {
+    display: block;
+  }
+  
+  #main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .kmap-inputs {
+    grid-template-columns: 1fr;
+  }
+  
+  .input-controls {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .header-subtitle {
+    display: none;
+  }
+  
+  .gate-selector, .tt-gate-selector {
+    justify-content: center;
+  }
+  
+  .kmap-cell {
+    width: 44px;
+    height: 44px;
+    font-size: 0.9rem;
+  }
+  
+  .sim-controls {
+    flex-wrap: wrap;
+  }
+}
+
+/* ==========================================================================
+   26. Animations (Additional)
+   ========================================================================== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+svg path, svg circle, svg rect {
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.active-wire {
+  stroke: var(--color-high) !important;
+  stroke-width: 2.5;
+}
+
+.inactive-wire {
+  stroke: #475569 !important;
+  stroke-width: 2.5;
+}
+
+/* ==========================================================================
+   27. Scrollbar Styling
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 3px;
+}
+
+/* ==========================================================================
+   28. Print Styles
+   ========================================================================== */
+@media print {
+  #sidebar, #app-header, .sim-controls, .input-controls, 
+  .gate-selector, .tt-gate-selector, .kmap-controls, 
+  .universal-type-btns, .universal-impl-btns, .menu-toggle {
+    display: none !important;
+  }
+  
+  #main-content {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+  
+  body, #app {
+    background-color: white;
+    color: black;
+  }
+  
+  .card, .module {
+    background-color: white;
+    border: 1px solid #ccc;
+    color: black;
+  }
+  
+  .text-secondary, .module-subtitle {
+    color: #444;
+  }
+}

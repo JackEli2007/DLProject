@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Logic Lab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- HEADER -->
+    <header id="app-header">
+      <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="header-content">
+        <h1 class="header-title">DIGITAL LOGIC LAB</h1>
+        <p class="header-subtitle">Interactive Boolean Logic & Digital Circuit Simulator</p>
+      </div>
+      <div class="header-status">
+        <span class="status-dot"></span>
+        <span class="status-text">Simulation Ready</span>
+      </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <nav id="sidebar">
+      <div class="nav-items">
+        <button class="nav-item active" data-module="dashboard">
+          <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
+        </button>
+        <button class="nav-item" data-module="gates">
+          <span class="nav-icon">⚡</span><span class="nav-label">Logic Gate Simulator</span>
+        </button>
+        <button class="nav-item" data-module="truthtable">
+          <span class="nav-icon">📋</span><span class="nav-label">Truth Table Generator</span>
+        </button>
+        <button class="nav-item" data-module="universal">
+          <span class="nav-icon">🔧</span><span class="nav-label">Universal Gates</span>
+        </button>
+        <button class="nav-item" data-module="kmap">
+          <span class="nav-icon">🗺️</span><span class="nav-label">K-Map Solver</span>
+        </button>
+        <button class="nav-item" data-module="learn">
+          <span class="nav-icon">📚</span><span class="nav-label">Learn / Reference</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div id="sidebar-overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+
+      <!-- DASHBOARD MODULE -->
+      <section class="module active" id="module-dashboard">
+        <div class="module-header">
+          <h2 class="module-title">Welcome to Digital Logic Lab</h2>
+          <p class="module-subtitle">A comprehensive toolkit for learning and simulating digital logic circuits.</p>
+        </div>
+        
+        <div class="dashboard-cards">
+          <div class="dash-card">
+            <span class="nav-icon" style="font-size: 2rem;">⚡</span>
+            <h3>Logic Gates</h3>
+            <p>Simulate basic gates: AND, OR, NOT, NAND, NOR, XOR, XNOR.</p>
+          </div>
+          <div class="dash-card">
+            <span class="nav-icon" style="font-size: 2rem;">📋</span>
+            <h3>Truth Tables</h3>
+            <p>Generate and view truth tables for logic functions and circuits.</p>
+          </div>
+          <div class="dash-card">
+            <span class="nav-icon" style="font-size: 2rem;">🔧</span>
+            <h3>Universal Gates</h3>
+            <p>Learn how NAND and NOR gates can implement any digital logic circuit.</p>
+          </div>
+          <div class="dash-card">
+            <span class="nav-icon" style="font-size: 2rem;">🗺️</span>
+            <h3>K-Map Solver</h3>
+            <p>Simplify boolean expressions with 2, 3, or 4 variable Karnaugh Maps.</p>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <button id="btn-start-sim" class="btn btn-primary" style="font-size: 1.25rem; padding: 0.75rem 2rem;">▶ Start Simulation</button>
+        </div>
+
+        <div class="learn-section">
+          <h3>What You Will Learn</h3>
+          <div class="dashboard-cards" style="grid-template-columns: repeat(3, 1fr); margin-top: 1rem;">
+            <div class="dash-card" style="padding: 1rem;">
+              <h4>Boolean Logic</h4>
+              <p>The foundation of all digital systems and computer architecture.</p>
+            </div>
+            <div class="dash-card" style="padding: 1rem;">
+              <h4>Logic Gates</h4>
+              <p>Physical devices implementing boolean functions.</p>
+            </div>
+            <div class="dash-card" style="padding: 1rem;">
+              <h4>Truth Tables</h4>
+              <p>Mapping all possible inputs to their corresponding outputs.</p>
+            </div>
+            <div class="dash-card" style="padding: 1rem;">
+              <h4>Universal Gates</h4>
+              <p>Cost-effective circuit design using only NAND or NOR gates.</p>
+            </div>
+            <div class="dash-card" style="padding: 1rem;">
+              <h4>Boolean Simplification</h4>
+              <p>Reducing complexity for optimal hardware performance.</p>
+            </div>
+            <div class="dash-card" style="padding: 1rem;">
+              <h4>Karnaugh Maps</h4>
+              <p>Visual tool for finding optimal logic implementations.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOGIC GATE SIMULATOR MODULE -->
+      <section class="module" id="module-gates">
+        <div class="module-header">
+          <h2 class="module-title">Logic Gate Simulator</h2>
+          <p class="module-subtitle">Interactive simulation of fundamental digital logic gates.</p>
+        </div>
+
+        <div class="gate-selector">
+          <button class="gate-btn active" data-gate="and">AND</button>
+          <button class="gate-btn" data-gate="or">OR</button>
+          <button class="gate-btn" data-gate="not">NOT</button>
+          <button class="gate-btn" data-gate="nand">NAND</button>
+          <button class="gate-btn" data-gate="nor">NOR</button>
+          <button class="gate-btn" data-gate="xor">XOR</button>
+          <button class="gate-btn" data-gate="xnor">XNOR</button>
+        </div>
+
+        <div id="gate-workspace" class="gate-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- LEFT COLUMN -->
+          <div class="simulation-area card" style="display: flex; flex-direction: column;">
+            <div class="input-controls" style="display: flex; justify-content: space-around; margin-bottom: 1rem;">
+              <div class="input-group">
+                <label>Input A</label>
+                <button class="switch-btn" id="switch-a" aria-label="Toggle input A">
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </button>
+                <span id="label-a">A = 0</span>
+              </div>
+              <div class="input-group" id="input-b-group">
+                <label>Input B</label>
+                <button class="switch-btn" id="switch-b" aria-label="Toggle input B">
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </button>
+                <span id="label-b">B = 0</span>
+              </div>
+            </div>
+
+            <div class="circuit-display" style="flex: 1; min-height: 200px;">
+              <svg id="gate-circuit-svg" viewBox="0 0 500 300" width="100%" height="100%"></svg>
+            </div>
+
+            <div class="output-display" style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+              <div id="output-led" style="width: 24px; height: 24px; border-radius: 50%; background: #475569;"></div>
+              <span id="output-value" style="font-size: 1.25rem; font-weight: bold;">OUTPUT: LOW (0)</span>
+            </div>
+
+            <div class="sim-controls" style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+              <button id="btn-reset-gate" class="btn btn-secondary">↺ Reset</button>
+              <button id="btn-random-gate" class="btn btn-secondary">🎲 Random</button>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="truth-table-section card">
+              <h3>Truth Table</h3>
+              <table id="gate-truth-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+                <thead>
+                  <tr>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>Output</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="gate-info-section card" id="gate-info-panel">
+              <h3 id="gate-info-name">AND Gate</h3>
+              <div class="info-row" style="margin-top: 0.5rem;">
+                <strong>Boolean Expression:</strong> <span id="gate-info-expression">Y = A · B</span>
+              </div>
+              <div class="info-row" style="margin-top: 0.5rem;">
+                <strong>Inputs:</strong> <span id="gate-info-inputs">2</span>
+              </div>
+              <p id="gate-info-description" style="margin-top: 0.5rem; color: var(--text-secondary);">Output HIGH only when BOTH inputs HIGH</p>
+              <div class="info-row" style="margin-top: 0.5rem;">
+                <strong>Real-world Example:</strong> <span id="gate-info-example">Safety mechanism requiring two keys turned simultaneously.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRUTH TABLE GENERATOR MODULE -->
+      <section class="module" id="module-truthtable">
+        <div class="module-header">
+          <h2 class="module-title">Truth Table Generator</h2>
+          <p class="module-subtitle">View truth tables for fundamental logic operations.</p>
+        </div>
+
+        <div class="tt-gate-selector gate-selector">
+          <button class="tt-gate-btn active" data-gate="and">AND</button>
+          <button class="tt-gate-btn" data-gate="or">OR</button>
+          <button class="tt-gate-btn" data-gate="not">NOT</button>
+          <button class="tt-gate-btn" data-gate="nand">NAND</button>
+          <button class="tt-gate-btn" data-gate="nor">NOR</button>
+          <button class="tt-gate-btn" data-gate="xor">XOR</button>
+          <button class="tt-gate-btn" data-gate="xnor">XNOR</button>
+        </div>
+
+        <div class="tt-workspace card">
+          <h3 id="tt-expression" style="text-align: center; margin-bottom: 0.5rem;">Y = A · B</h3>
+          <p id="tt-description" style="text-align: center; margin-bottom: 1.5rem; color: var(--text-secondary);">Output HIGH only when BOTH inputs HIGH</p>
+          
+          <div class="tt-table-wrapper" id="tt-table-container">
+            <!-- Table generated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- UNIVERSAL GATES MODULE -->
+      <section class="module" id="module-universal">
+        <div class="module-header">
+          <h2 class="module-title">Universal Gate Realization</h2>
+          <p class="module-subtitle">NAND and NOR are universal gates because any boolean function can be implemented using only one of them.</p>
+        </div>
+
+        <div class="universal-type-btns" style="display: flex; gap: 1rem; margin-bottom: 1rem; justify-content: center;">
+          <button id="btn-type-nand" class="btn active">NAND Implementation</button>
+          <button id="btn-type-nor" class="btn">NOR Implementation</button>
+        </div>
+
+        <div class="universal-impl-btns" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; justify-content: center;">
+          <button class="impl-btn active" data-impl="not">NOT Gate</button>
+          <button class="impl-btn" data-impl="and">AND Gate</button>
+          <button class="impl-btn" data-impl="or">OR Gate</button>
+        </div>
+
+        <div class="universal-workspace" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- LEFT -->
+          <div class="simulation-area card" style="display: flex; flex-direction: column;">
+            <div class="input-controls" style="display: flex; justify-content: space-around; margin-bottom: 1rem;">
+              <div class="input-group">
+                <label>Input A</label>
+                <button class="switch-btn" id="universal-switch-a" aria-label="Toggle universal input A">
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </button>
+                <span id="universal-label-a">A = 0</span>
+              </div>
+              <div class="input-group" id="universal-input-b-group" style="display: none;">
+                <label>Input B</label>
+                <button class="switch-btn" id="universal-switch-b" aria-label="Toggle universal input B">
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                </button>
+                <span id="universal-label-b">B = 0</span>
+              </div>
+            </div>
+            <div class="circuit-display" style="flex: 1; min-height: 250px;">
+              <svg id="universal-circuit-svg" viewBox="0 0 600 350" width="100%" height="100%"></svg>
+            </div>
+            <div class="output-display" style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+              <div id="universal-output-led" style="width: 24px; height: 24px; border-radius: 50%; background: #475569;"></div>
+              <span id="universal-output-value" style="font-size: 1.25rem; font-weight: bold;">OUTPUT: LOW (0)</span>
+            </div>
+          </div>
+
+          <!-- RIGHT -->
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="card">
+              <h3>Truth Table</h3>
+              <table id="universal-truth-table" style="width: 100%; border-collapse: collapse; text-align: center; margin-top: 1rem;">
+                <thead>
+                  <tr>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>Output</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card" id="universal-expression">
+              <h3>Boolean Expression</h3>
+              <p style="margin-top: 0.5rem; font-family: monospace; font-size: 1.2rem; background: var(--bg-secondary); padding: 0.5rem; border-radius: 4px;">Y = (A · A)'</p>
+            </div>
+
+            <div class="card" id="universal-explanation">
+              <h3>How It Works</h3>
+              <p style="margin-top: 0.5rem; color: var(--text-secondary);">By tying both inputs of a NAND gate together, it acts as a NOT gate.</p>
+            </div>
+
+            <div class="card" id="universal-why">
+              <h3>Why Universal Gates?</h3>
+              <p style="margin-top: 0.5rem; color: var(--text-secondary);">Using a single type of gate for an entire circuit reduces manufacturing complexity and costs. An entire CPU can technically be built using only NAND gates!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- K-MAP SOLVER MODULE -->
+      <section class="module" id="module-kmap">
+        <div class="module-header">
+          <h2 class="module-title">Karnaugh Map Solver</h2>
+          <p class="module-subtitle">Simplify boolean expressions visually using 2, 3, or 4 variable Karnaugh Maps.</p>
+        </div>
+
+        <div class="kmap-controls card">
+          <div class="kmap-var-btns" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+            <label style="font-weight: bold;">Number of Variables:</label>
+            <button class="var-btn active" data-vars="2">2</button>
+            <button class="var-btn" data-vars="3">3</button>
+            <button class="var-btn" data-vars="4">4</button>
+          </div>
+
+          <div class="kmap-inputs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="input-field" style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label for="kmap-minterms-input">Minterms (comma-separated):</label>
+              <input id="kmap-minterms-input" type="text" placeholder="e.g. 1,3,5,7" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);">
+            </div>
+            <div class="input-field" style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label for="kmap-dontcare-input">Don't Care (comma-separated):</label>
+              <input id="kmap-dontcare-input" type="text" placeholder="e.g. 2,6" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);">
+            </div>
+          </div>
+
+          <div class="kmap-btns" style="display: flex; gap: 1rem;">
+            <button id="btn-generate-kmap" class="btn btn-primary">Generate K-Map</button>
+            <button id="btn-clear-kmap" class="btn btn-secondary">Clear</button>
+            <button id="btn-random-kmap" class="btn btn-secondary">🎲 Random Example</button>
+            <button id="btn-example-kmap" class="btn btn-secondary">📖 Load Demo</button>
+          </div>
+        </div>
+
+        <div class="kmap-display" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+          <div class="kmap-grid-wrapper card">
+            <h3>Karnaugh Map</h3>
+            <div id="kmap-grid-container" style="margin-top: 1rem; overflow-x: auto;">
+              <!-- Grid generated by JS -->
+            </div>
+          </div>
+
+          <div id="kmap-result" style="display: none; flex-direction: column; gap: 1.5rem;">
+            <div class="card">
+              <h3>Original Function</h3>
+              <p id="kmap-original-expr" style="margin-top: 0.5rem; font-family: monospace; font-size: 1.1rem; color: var(--text-secondary);"></p>
+            </div>
+            
+            <div class="card">
+              <h3>Simplified Expression</h3>
+              <p id="kmap-simplified-expr" class="highlight-expr" style="margin-top: 0.5rem; font-family: monospace; font-size: 1.5rem; color: var(--accent-cyan); font-weight: bold; background: var(--bg-secondary); padding: 1rem; border-radius: 4px; text-align: center;"></p>
+            </div>
+
+            <div class="card">
+              <h3>Groups Found</h3>
+              <div id="kmap-groups-list" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <!-- Generated by JS -->
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Step-by-Step Simplification</h3>
+              <div id="kmap-steps" style="margin-top: 0.5rem; color: var(--text-secondary); line-height: 1.5;">
+                <!-- Generated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEARN / REFERENCE MODULE -->
+      <section class="module" id="module-learn">
+        <div class="module-header">
+          <h2 class="module-title">Learn / Reference</h2>
+          <p class="module-subtitle">A quick guide to digital logic, boolean algebra, and Karnaugh maps.</p>
+        </div>
+
+        <div class="learn-content" style="display: flex; flex-direction: column; gap: 2rem;">
+          <div class="learn-section card">
+            <h2>What is Boolean Algebra?</h2>
+            <p style="margin-top: 1rem; line-height: 1.6;">Boolean algebra is a branch of mathematics where the values of variables are true and false (usually denoted as 1 and 0). Unlike elementary algebra, where variables represent numbers and the main operations are addition and multiplication, the main operations of Boolean algebra are the conjunction (AND), the disjunction (OR), and the negation (NOT).</p>
+            <p style="margin-top: 1rem; line-height: 1.6;">It forms the fundamental basis of all modern digital computer design, enabling engineers to design complex logical circuits by simplifying logical expressions.</p>
+          </div>
+
+          <div class="learn-section card">
+            <h2>What is a Logic Gate?</h2>
+            <p style="margin-top: 1rem; line-height: 1.6;">A logic gate is an idealized or physical electronic device implementing a Boolean function, a logical operation performed on one or more binary inputs that produces a single binary output. They are primarily implemented using diodes or transistors acting as electronic switches.</p>
+          </div>
+
+          <div class="learn-section card">
+            <h2>Logic Gate Summary</h2>
+            <table class="gate-summary-table" style="width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left;">
+              <thead style="background: var(--bg-secondary);">
+                <tr>
+                  <th style="padding: 0.75rem; border-bottom: 2px solid var(--border-color);">Gate</th>
+                  <th style="padding: 0.75rem; border-bottom: 2px solid var(--border-color);">Symbol</th>
+                  <th style="padding: 0.75rem; border-bottom: 2px solid var(--border-color);">Expression</th>
+                  <th style="padding: 0.75rem; border-bottom: 2px solid var(--border-color);">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-weight: bold;">AND</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">·</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-family: monospace;">Y = A · B</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Output HIGH only when BOTH inputs HIGH</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-weight: bold;">OR</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">+</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-family: monospace;">Y = A + B</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Output HIGH when ANY input is HIGH</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-weight: bold;">NOT</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">¯</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-family: monospace;">Y = A̅</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Output is the INVERSE of input</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-weight: bold;">NAND</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">(·)̅</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-family: monospace;">Y = (A · B)̅</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Output LOW only when BOTH inputs HIGH</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-weight: bold;">NOR</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">(+)̅</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-family: monospace;">Y = (A + B)̅</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Output HIGH only when BOTH inputs LOW</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-weight: bold;">XOR</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">⊕</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-family: monospace;">Y = A ⊕ B</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Output HIGH when inputs are DIFFERENT</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-weight: bold;">XNOR</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">(⊕)̅</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); font-family: monospace;">Y = (A ⊕ B)̅</td>
+                  <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Output HIGH when inputs are SAME</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="learn-section card">
+            <h2>Universal Gates</h2>
+            <p style="margin-top: 1rem; line-height: 1.6;">NAND and NOR gates are known as "Universal Gates" because you can construct any other boolean logic gate (AND, OR, NOT, etc.) using ONLY NAND gates or ONLY NOR gates.</p>
+            <p style="margin-top: 1rem; line-height: 1.6;">This property is heavily utilized in integrated circuit design to reduce manufacturing costs, since a single type of transistor layout can be replicated to achieve any desired logic function.</p>
+          </div>
+
+          <div class="learn-section card">
+            <h2>Karnaugh Maps</h2>
+            <p style="margin-top: 1rem; line-height: 1.6;">A Karnaugh map (K-map) is a visual method of simplifying boolean algebra expressions. It organizes a truth table into a 2D grid where neighboring cells differ by exactly one bit (Gray code ordering).</p>
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">What are Minterms and Maxterms?</h3>
+            <ul style="margin-left: 1.5rem; line-height: 1.6;">
+              <li><strong>Minterm:</strong> A product term (AND) where all variables appear exactly once. Denotes a '1' in the truth table.</li>
+              <li><strong>Maxterm:</strong> A sum term (OR) where all variables appear exactly once. Denotes a '0' in the truth table.</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Don't Care Conditions</h3>
+            <p style="line-height: 1.6;">In some systems, certain input combinations will never occur. These outputs are marked with 'X' (Don't Care). We can choose to treat an 'X' as a '1' or a '0' depending on whichever makes our groupings larger (and thus, our final expression simpler).</p>
+
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Gray Code Ordering</h3>
+            <p style="line-height: 1.6;">The sequence of inputs on the K-map axes follows Gray Code (e.g., 00, 01, 11, 10). This ensures that moving from one cell to an adjacent cell changes only one variable.</p>
+
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Grouping Rules</h3>
+            <ul style="margin-left: 1.5rem; line-height: 1.6;">
+              <li>Groups must contain 1, 2, 4, 8, or 16 cells (powers of 2).</li>
+              <li>Groups can only be horizontal or vertical (no diagonals).</li>
+              <li>Groups should be as large as possible.</li>
+              <li>The grid wraps around (edges are considered adjacent).</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Boolean Simplification from K-maps</h3>
+            <p style="line-height: 1.6;">After forming groups, write the simplified expression by observing which variables remain constant within each group. Variables that change (e.g. A is 0 in one part of the group and 1 in another) are eliminated.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast notification container -->
+  <div id="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
