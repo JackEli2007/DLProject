@@ -59,13 +59,13 @@ export const MODULE_INFO = {
 
 // Navigation items
 export const NAV_ITEMS = [
-  { path: '/', label: 'Home', icon: 'home' },
-  { path: '/learn', label: 'Learn', icon: 'book' },
-  { path: '/lab', label: 'Lab', icon: 'flask' },
-  { path: '/practice', label: 'Practice', icon: 'target' },
-  { path: '/challenges', label: 'Challenges', icon: 'trophy' },
-  { path: '/quiz', label: 'Quiz', icon: 'help-circle' },
-  { path: '/progress', label: 'Progress', icon: 'bar-chart' },
+  { path: '/', label: 'Laboratory', icon: 'flask' },
+  { path: '/lab/jk-simulator', label: 'JK Simulator', icon: 'home' },
+  { path: '/lab/race-around', label: 'Race-Around', icon: 'target' },
+  { path: '/lab/master-slave', label: 'Master-Slave', icon: 'trophy' },
+  { path: '/lab/char-explorer', label: 'Char Explorer', icon: 'book' },
+  { path: '/lab/ascii-explorer', label: 'ASCII Table', icon: 'help-circle' },
+  { path: '/lab/converter', label: 'Converter', icon: 'bar-chart' },
 ];
 
 // Difficulty levels

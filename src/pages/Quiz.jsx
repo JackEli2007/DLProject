@@ -24,7 +24,11 @@ const Quiz = () => {
   const startQuiz = () => {
     let filtered = quizQuestions || [];
     if (selectedTopic !== 'all') {
-      filtered = filtered.filter(q => q.topic === selectedTopic);
+      const moduleMap = {
+        'jk-flipflop': 'jkFlipFlop',
+        'char-codes': 'charCodes'
+      };
+      filtered = filtered.filter(q => q.module === moduleMap[selectedTopic]);
     }
     // Shuffle and pick up to 10
     const shuffled = [...filtered].sort(() => 0.5 - Math.random()).slice(0, 10);

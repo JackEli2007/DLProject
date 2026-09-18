@@ -8,8 +8,13 @@ const FlowNode = ({ title, value, color }) => (
 );
 
 const ConversionFlow = ({ char, representations }) => {
-  // representations = { unicode: 'U+0041', ascii: '65', utf8: '41', binary: '01000001' }
   const r = representations || {};
+  
+  // Extract display strings from the complex objects
+  const unicodeDisplay = r.unicode?.hex || '?';
+  const asciiDisplay = r.ascii ? r.ascii.decimal : 'N/A';
+  const utf8Display = r.utf8 ? r.utf8.hex.join(' ') : '?';
+  const binaryDisplay = r.ascii ? r.ascii.binary : (r.utf8 ? r.utf8.binary.join(' ') : '?');
 
   return (
     <div className="relative flex flex-col items-center w-full max-w-2xl mx-auto py-8">
@@ -39,18 +44,18 @@ const ConversionFlow = ({ char, representations }) => {
 
         {/* Middle: Unicode */}
         <div className="flex justify-center w-full z-10">
-          <FlowNode title="Code Point" value={r.unicode} color="border-blue-400 text-blue-600 dark:text-blue-400" />
+          <FlowNode title="Code Point" value={unicodeDisplay} color="border-blue-400 text-blue-600 dark:text-blue-400" />
         </div>
 
         {/* Lower Middle: ASCII & UTF8 */}
         <div className="flex justify-between w-full max-w-sm px-8 z-10">
-          <FlowNode title="ASCII Dec" value={r.ascii} color="border-purple-400 text-purple-600 dark:text-purple-400" />
-          <FlowNode title="UTF-8 Hex" value={r.utf8} color="border-cyan-400 text-cyan-600 dark:text-cyan-400" />
+          <FlowNode title="ASCII Dec" value={asciiDisplay} color="border-purple-400 text-purple-600 dark:text-purple-400" />
+          <FlowNode title="UTF-8 Hex" value={utf8Display} color="border-cyan-400 text-cyan-600 dark:text-cyan-400" />
         </div>
 
         {/* Bottom: Binary */}
         <div className="flex justify-center w-full z-10">
-          <FlowNode title="Binary" value={r.binary} color="border-emerald-400 text-emerald-600 dark:text-emerald-400" />
+          <FlowNode title="Binary" value={binaryDisplay} color="border-emerald-400 text-emerald-600 dark:text-emerald-400" />
         </div>
       </div>
     </div>

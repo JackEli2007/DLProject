@@ -1,21 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '../ui/Card';
 
-const QuestionCard = ({ question, onAnswer, showResult, selectedAnswer }) => {
+const QuestionCard = ({ question, onSubmit, showFeedbackImmediately = false, onAnswer, showResult: externalShowResult, selectedAnswer: externalSelectedAnswer }) => {
   const isMultipleChoice = question.type === 'multiple-choice';
+  
+  const [localSelectedAnswer, setLocalSelectedAnswer] = useState(null);
+  const [localShowResult, setLocalShowResult] = useState(false);
+
+  const selectedAnswer = externalSelectedAnswer !== undefined ? externalSelectedAnswer : localSelectedAnswer;
+  const showResult = externalShowResult !== undefined ? externalShowResult : localShowResult;
+
+  // Reset local state if question changes
+  useEffect(() => {
+    setLocalSelectedAnswer(null);
+    setLocalShowResult(false);
+  }, [question.id]);
+
+  const handleSelect = (optionId) => {
+    if (showResult) return;
+    
+    if (onAnswer) {
+      onAnswer(optionId);
+    } else {
+      setLocalSelectedAnswer(optionId);
+      const isCorrect = optionId === question.correctAnswer;
+      if (showFeedbackImmediately) {
+        setLocalShowResult(true);
+      }
+      if (onSubmit) {
+        onSubmit(isCorrect);
+      }
+    }
+  };
 
   return (
     <Card className="w-full">
       <div className="mb-6">
         <h3 className="text-xl font-medium text-slate-800 dark:text-white leading-relaxed">
-          {question.text}
+          {question.text || question.question}
         </h3>
       </div>
 
       <div className="space-y-3">
-        {question.options.map((option, idx) => {
-          const isSelected = selectedAnswer === option.id;
-          const isCorrect = option.id === question.correctAnswer;
+        {(question.options || []).map((opt, idx) => {
+          const id = typeof opt === 'object' ? (opt.id !== undefined ? opt.id : opt.value) : idx;
+          const text = typeof opt === 'object' ? (opt.text || opt.label) : opt;
+          
+          const isSelected = selectedAnswer === id;
+          const isCorrect = id === (question.correctAnswer !== undefined ? question.correctAnswer : question.correct);
           
           let stateClass = "border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer";
           
@@ -33,8 +65,8 @@ const QuestionCard = ({ question, onAnswer, showResult, selectedAnswer }) => {
 
           return (
             <button
-              key={option.id}
-              onClick={() => !showResult && onAnswer(option.id)}
+              key={id}
+              onClick={() => handleSelect(id)}
               disabled={showResult}
               className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 ${stateClass}`}
               aria-pressed={isSelected}
@@ -58,7 +90,7 @@ const QuestionCard = ({ question, onAnswer, showResult, selectedAnswer }) => {
                   )}
                   {!showResult && isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
                 </div>
-                <span className="font-medium text-slate-700 dark:text-slate-200">{option.text}</span>
+                <span className="font-medium text-slate-700 dark:text-slate-200">{text}</span>
               </div>
             </button>
           );
@@ -66,9 +98,9 @@ const QuestionCard = ({ question, onAnswer, showResult, selectedAnswer }) => {
       </div>
 
       {showResult && question.explanation && (
-        <div className={`mt-6 p-4 rounded-lg border ${selectedAnswer === question.correctAnswer ? 'bg-emerald-50 border-emerald-200 dark:bg-emerald-900/10 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-200' : 'bg-red-50 border-red-200 dark:bg-red-900/10 dark:border-red-900/30 text-red-800 dark:text-red-200'}`}>
+        <div className={`mt-6 p-4 rounded-lg border ${selectedAnswer === (question.correctAnswer !== undefined ? question.correctAnswer : question.correct) ? 'bg-emerald-50 border-emerald-200 dark:bg-emerald-900/10 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-200' : 'bg-red-50 border-red-200 dark:bg-red-900/10 dark:border-red-900/30 text-red-800 dark:text-red-200'}`}>
           <h4 className="font-bold mb-1 flex items-center">
-            {selectedAnswer === question.correctAnswer ? 'Correct!' : 'Incorrect'}
+            {selectedAnswer === (question.correctAnswer !== undefined ? question.correctAnswer : question.correct) ? 'Correct!' : 'Incorrect'}
           </h4>
           <p className="text-sm opacity-90">{question.explanation}</p>
         </div>

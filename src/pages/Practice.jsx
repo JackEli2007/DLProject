@@ -31,7 +31,24 @@ const Practice = () => {
     { id: 'char-codes', label: 'Character Codes' }
   ];
 
-  const filteredProblems = (practiceProblems || []).filter(p => p.topic === activeTab);
+  const keyMap = {
+    'jk-flipflop': 'jkFlipFlop',
+    'race-around': 'raceAround',
+    'char-codes': 'charCodes'
+  };
+
+  const getFilteredProblems = () => {
+    const topicData = practiceProblems[keyMap[activeTab]];
+    if (!topicData) return [];
+    // Combine beginner, intermediate, advanced into one array
+    return [
+      ...(topicData.beginner || []),
+      ...(topicData.intermediate || []),
+      ...(topicData.advanced || [])
+    ];
+  };
+
+  const filteredProblems = getFilteredProblems();
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">

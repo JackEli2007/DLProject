@@ -10,7 +10,7 @@ export default function ASCIIExplorer() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [selectedChar, setSelectedChar] = useState(null);
 
-  const categories = ['All', ...Object.keys(asciiCategories)];
+  const categories = ['All', 'Control', 'Space', 'Symbol', 'Digit', 'Uppercase', 'Lowercase'];
 
   const filteredTable = asciiTable.filter(item => {
     const matchesSearch = 

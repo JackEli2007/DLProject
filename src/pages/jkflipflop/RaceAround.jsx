@@ -15,11 +15,11 @@ export default function RaceAround() {
   
   const propDelay = 10; // ns
   const threshold = getRaceAroundThreshold(propDelay);
-  const isRacing = wouldCauseRaceAround(pulseWidth * propDelay, propDelay);
+  const isRacing = wouldCauseRaceAround(1, 1, pulseWidth * propDelay, propDelay);
 
   const handleApplyPulse = () => {
-    const result = simulateRaceAround(pulseWidth * propDelay, propDelay, currentQ);
-    setToggleSequence(result.sequence);
+    const result = simulateRaceAround(1, 1, currentQ, pulseWidth * propDelay, propDelay);
+    setToggleSequence(result.toggleSequence);
     setCurrentQ(result.finalQ);
     
     if (result.toggleCount > 1) {
@@ -39,6 +39,20 @@ export default function RaceAround() {
           {getRaceAroundExplanation()}
         </p>
       </Card>
+
+      {/* Real-Life Examples */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="p-5 bg-gradient-to-br from-red-900/30 to-slate-900 rounded-xl border border-red-500/20">
+          <div className="text-2xl mb-2">🏗️</div>
+          <h3 className="text-sm font-bold text-red-300">Glitchy Elevator Controller</h3>
+          <p className="text-xs text-slate-400 mt-1 leading-relaxed">Old elevator systems used level-triggered flip-flops for floor counting. If the clock pulse lasted longer than the propagation delay while in toggle mode, the counter would race — potentially skipping floors or oscillating between them.</p>
+        </div>
+        <div className="p-5 bg-gradient-to-br from-amber-900/30 to-slate-900 rounded-xl border border-amber-500/20">
+          <div className="text-2xl mb-2">🏭</div>
+          <h3 className="text-sm font-bold text-amber-300">Industrial Safety Hazard</h3>
+          <p className="text-xs text-slate-400 mt-1 leading-relaxed">In factory automation, safety interlocks use flip-flops to ensure machines stop when guards are opened. Race-around could cause the safety signal to oscillate — briefly restarting a machine during an unsafe condition.</p>
+        </div>
+      </div>
 
       <Card className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

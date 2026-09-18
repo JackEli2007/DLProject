@@ -20,6 +20,7 @@ const experiments = [
   { j: 0, k: 1, initialQ: 1, followUp: { j: 1, k: 0 }, question: 'Apply J=0,K=1 then J=1,K=0. What is final Q?', correct: 1 },
   { j: 1, k: 1, initialQ: 0, followUp: { j: 1, k: 1 }, question: 'Apply TOGGLE twice from Q=0. What is final Q?', correct: 0 },
   { j: 1, k: 1, initialQ: 1, followUp: { j: 0, k: 0 }, question: 'Apply TOGGLE then HOLD from Q=1. What is final Q?', correct: 0 },
+  { j: 0, k: 1, initialQ: 0, followUp: { j: 0, k: 0 }, question: 'Apply RESET then HOLD. What is final Q?', correct: 0 },
 ];
 
 export default function JKExperiment() {
@@ -28,7 +29,7 @@ export default function JKExperiment() {
   const [phase, setPhase] = useState('predict'); // predict, verify, done
   const [simResult, setSimResult] = useState(null);
   
-  const { awardXP } = useProgress();
+  const { awardXP, progress } = useProgress();
 
   const experiment = experiments[currentIndex];
 
@@ -77,9 +78,20 @@ export default function JKExperiment() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <h1 className="text-2xl font-bold text-slate-100">Guided Experiments</h1>
-        <div className="text-slate-400">Score: {score} / {experiments.length}</div>
+        <div className="flex items-center gap-4">
+          <div className="text-slate-400 font-medium">Score: {score} / {experiments.length}</div>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20">
+            <span className="text-amber-400">⚡</span>
+            <span className="text-sm font-bold text-amber-300">
+              {progress.xp} XP
+            </span>
+            <span className="text-xs font-semibold text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full ml-1">
+              Lv.{progress.level}
+            </span>
+          </div>
+        </div>
       </div>
       
       <ProgressBar progress={(currentIndex / experiments.length) * 100} />
@@ -98,6 +110,7 @@ export default function JKExperiment() {
           
           <div className="w-full md:w-2/3">
             <PredictionPrompt 
+              key={currentIndex}
               question={experiment.question}
               options={[
                 { label: 'Q = 0', value: 0 },

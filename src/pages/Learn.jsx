@@ -18,7 +18,12 @@ const Learn = () => {
       <Card 
         key={lesson.id}
         className={`flex flex-col transition-all ${isUnlocked ? 'cursor-pointer hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500' : 'opacity-75 cursor-not-allowed grayscale'}`}
-        onClick={() => isUnlocked && navigate(`/learn/${moduleKey}/${lesson.id}`)}
+        onClick={() => {
+          if (isUnlocked) {
+            const path = moduleKey === 'jkFlipFlop' ? '/learn/jk-flipflop' : '/learn/char-codes';
+            navigate(path);
+          }
+        }}
       >
         <div className="p-5 flex flex-col h-full">
           <div className="flex justify-between items-start mb-3">

@@ -1,8 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext.jsx';
-import { useProgress } from '../../context/ProgressContext.jsx';
 import { NAV_ITEMS } from '../../utils/constants.js';
-import { formatXP } from '../../utils/formatters.js';
 
 const navIcons = {
   home: (
@@ -44,7 +42,6 @@ const navIcons = {
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
-  const { progress } = useProgress();
   const location = useLocation();
 
   // Determine current section name
@@ -92,20 +89,8 @@ const Navbar = () => {
           ))}
         </nav>
 
-        {/* Right section: XP + Theme toggle */}
+        {/* Right section: Theme toggle */}
         <div className="flex items-center gap-3">
-          {/* XP Badge */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20">
-            <span className="text-amber-600 dark:text-amber-400 text-sm">⚡</span>
-            <span className="text-sm font-semibold text-amber-700 dark:text-amber-300">
-              {formatXP(progress.xp)} XP
-            </span>
-            <span className="text-xs text-amber-500 dark:text-amber-400/70">
-              Lv.{progress.level}
-            </span>
-          </div>
-
-          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"

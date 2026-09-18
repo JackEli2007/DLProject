@@ -132,6 +132,25 @@ export default function JKSimulator() {
         </div>
       </div>
 
+      {/* Real-Life Examples */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="p-4 bg-gradient-to-br from-blue-900/40 to-slate-900 rounded-xl border border-blue-500/20">
+          <div className="text-2xl mb-2">🚦</div>
+          <h3 className="text-sm font-bold text-blue-300">Traffic Light Controller</h3>
+          <p className="text-xs text-slate-400 mt-1">Traffic lights use JK flip-flops to cycle through Red → Green → Yellow states. Each clock pulse advances to the next light.</p>
+        </div>
+        <div className="p-4 bg-gradient-to-br from-cyan-900/40 to-slate-900 rounded-xl border border-cyan-500/20">
+          <div className="text-2xl mb-2">⏰</div>
+          <h3 className="text-sm font-bold text-cyan-300">Digital Clock Counter</h3>
+          <p className="text-xs text-slate-400 mt-1">Your digital clock uses cascaded JK flip-flops as frequency dividers — a 32,768 Hz crystal is halved 15 times to produce 1 Hz (1 second).</p>
+        </div>
+        <div className="p-4 bg-gradient-to-br from-purple-900/40 to-slate-900 rounded-xl border border-purple-500/20">
+          <div className="text-2xl mb-2">💾</div>
+          <h3 className="text-sm font-bold text-purple-300">Computer RAM</h3>
+          <p className="text-xs text-slate-400 mt-1">Every single bit of your computer's memory is stored in a flip-flop. 8 GB of RAM = 64 billion flip-flops working simultaneously!</p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel */}
         <Card className="p-6 flex flex-col gap-6">
@@ -207,7 +226,7 @@ export default function JKSimulator() {
              <TruthTable 
                columns={['J', 'K', 'Q(t)', 'Q(t+1)', 'Condition']}
                rows={getTruthTable()}
-               highlightRow={(row) => row.j === j && row.k === k && row.q === flipFlop.q}
+               highlightRow={(row) => row.j === j && row.k === k && row.currentQ === flipFlop.q}
                onRowClick={(row) => { setJ(row.j); setK(row.k); }}
              />
           </div>

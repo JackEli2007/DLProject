@@ -35,22 +35,31 @@ const PredictionPrompt = ({ question, options, correctAnswer, onPredict, onVerif
 
       {phase === 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {options.map((opt) => (
-            <button
-              key={opt.id}
-              onClick={() => handlePredict(opt.id)}
-              className="p-3 text-center border-2 border-slate-200 dark:border-slate-700 rounded-lg hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all font-medium text-slate-700 dark:text-slate-200"
-            >
-              {opt.text}
-            </button>
-          ))}
+          {options.map((opt, index) => {
+            const id = typeof opt === 'object' ? (opt.id !== undefined ? opt.id : opt.value) : index;
+            const text = typeof opt === 'object' ? (opt.text || opt.label) : opt;
+            return (
+              <button
+                key={id}
+                onClick={() => handlePredict(id)}
+                className="p-3 text-center border-2 border-slate-200 dark:border-slate-700 rounded-lg hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all font-medium text-slate-700 dark:text-slate-200"
+              >
+                {text}
+              </button>
+            );
+          })}
         </div>
       )}
 
       {phase === 1 && (
         <div className="flex flex-col items-center justify-center py-6">
           <p className="text-slate-600 dark:text-slate-400 mb-4">
-            You predicted: <strong className="text-slate-800 dark:text-white">{options.find(o => o.id === prediction)?.text}</strong>
+            You predicted: <strong className="text-slate-800 dark:text-white">
+              {(() => {
+                const opt = options.find((o, idx) => (typeof o === 'object' ? (o.id !== undefined ? o.id : o.value) : idx) === prediction);
+                return typeof opt === 'object' ? (opt.text || opt.label) : opt;
+              })()}
+            </strong>
           </p>
           <p className="text-sm text-slate-500 mb-6 text-center max-w-sm">
             Now, use the simulation tools to test your prediction. When you have the result, click Verify.
@@ -78,11 +87,13 @@ const PredictionPrompt = ({ question, options, correctAnswer, onPredict, onVerif
             {isCorrect ? 'Prediction Correct!' : 'Prediction Incorrect'}
           </h4>
           <p className="text-slate-600 dark:text-slate-300">
-            {simulationResult || `The correct answer was: ${options.find(o => o.id === correctAnswer)?.text}`}
+            {simulationResult || (() => {
+              const opt = options.find((o, idx) => (typeof o === 'object' ? (o.id !== undefined ? o.id : o.value) : idx) === correctAnswer);
+              const text = typeof opt === 'object' ? (opt.text || opt.label) : opt;
+              return `The correct answer was: ${text}`;
+            })()}
           </p>
-          <Button variant="ghost" className="mt-4" onClick={() => setPhase(0)}>
-            Try Another
-          </Button>
+          {/* Removed Try Another button as requested */}
         </div>
       )}
     </Card>

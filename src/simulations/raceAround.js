@@ -34,6 +34,9 @@ export const wouldCauseRaceAround = (j, k, pulseWidth, propagationDelay) => {
 };
 
 export const getRaceAroundExplanation = (toggleCount, raceDetected) => {
+  if (toggleCount === undefined && raceDetected === undefined) {
+    return "The Race-Around condition occurs in level-triggered JK flip-flops when both inputs are HIGH (J=1, K=1) and the clock pulse remains HIGH longer than the propagation delay of the flip-flop. This causes the output to continuously toggle between 0 and 1, leading to an unpredictable final state.";
+  }
   if (!raceDetected) {
     return "Normal operation. The clock pulse is short enough that the flip-flop output settles to a single stable state.";
   }

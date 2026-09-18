@@ -61,25 +61,29 @@ export default function JKLessons() {
           </div>
 
           <div className="space-y-6 text-slate-300">
-            {lesson.blocks.map((block, idx) => {
-              if (block.type === 'explain') return <p key={idx} className="text-lg leading-relaxed">{block.content}</p>;
-              if (block.type === 'keypoint') return <div key={idx} className="p-4 bg-yellow-500/10 border-l-4 border-yellow-500 rounded text-yellow-100">{block.content}</div>;
+            {(lesson.content || []).map((block, idx) => {
+              if (block.type === 'explain') return (
+                <div key={idx} className="space-y-2">
+                  <h3 className="text-xl font-semibold text-white">{block.title}</h3>
+                  <p className="text-lg leading-relaxed">{block.text}</p>
+                </div>
+              );
+              if (block.type === 'keypoint') return <div key={idx} className="p-4 bg-yellow-500/10 border-l-4 border-yellow-500 rounded text-yellow-100">{block.text}</div>;
               if (block.type === 'predict') return (
                  <PredictionPrompt 
                    key={idx}
                    question={block.question}
                    options={block.options}
-                   correctAnswer={block.correctAnswer}
+                   correctAnswer={block.correct}
                    onVerify={(isCorrect) => {
                      if(isCorrect) awardXP(10);
                    }}
                  />
               );
-              if (block.type === 'interact') return (
+              if (block.type === 'interact' || block.type === 'practice') return (
                 <div key={idx} className="p-4 border border-slate-700 rounded-lg bg-slate-800/50">
-                  <p className="text-sm text-slate-400 mb-2">Interactive Demo:</p>
-                  {/* Inline demo would go here based on block.demoId */}
-                  <div className="h-32 flex items-center justify-center text-slate-500 italic border border-dashed border-slate-600 rounded">Interactive Demo placeholder</div>
+                  <p className="text-sm font-semibold text-blue-400 mb-2">Try It: {block.instruction}</p>
+                  <Button variant="outline" onClick={() => navigate('/lab/jk-simulator')}>Open Simulator</Button>
                 </div>
               );
               return null;

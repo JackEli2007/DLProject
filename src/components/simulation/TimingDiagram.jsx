@@ -17,7 +17,7 @@ const TimingDiagram = ({ signals = [], width = 600, height = 300, maxSteps = 20 
   const paddingY = (trackHeight - signalHeight) / 2;
 
   // Calculate required width based on data points
-  const maxDataLen = Math.max(0, ...signals.map(s => s.values.length));
+  const maxDataLen = Math.max(0, ...signals.map(s => (s.data || s.values || []).length));
   const innerWidth = Math.max(width - labelWidth, maxDataLen * stepWidth + stepWidth);
 
   return (
@@ -53,12 +53,13 @@ const TimingDiagram = ({ signals = [], width = 600, height = 300, maxSteps = 20 
           {signals.map((signal, trackIdx) => {
             const yOffset = trackIdx * trackHeight;
             const color = signal.color || '#3b82f6';
+            const dataArr = signal.data || signal.values || [];
             
             // Generate path for the digital waveform
             let d = '';
-            for (let i = 0; i < signal.values.length; i++) {
-              const val = signal.values[i];
-              const prevVal = i > 0 ? signal.values[i-1] : val;
+            for (let i = 0; i < dataArr.length; i++) {
+              const val = dataArr[i];
+              const prevVal = i > 0 ? dataArr[i-1] : val;
               
               const x1 = i * stepWidth;
               const x2 = (i + 1) * stepWidth;
@@ -99,7 +100,7 @@ const TimingDiagram = ({ signals = [], width = 600, height = 300, maxSteps = 20 
                 />
                 
                 {/* Dots on transitions or steps for clarity */}
-                {signal.values.map((v, i) => (
+                {dataArr.map((v, i) => (
                   <circle 
                     key={`dot-${i}`}
                     cx={i * stepWidth}

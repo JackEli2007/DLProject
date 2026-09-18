@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { charToAllCodes, getASCIICategory } from '../../simulations/characterCodes';
-import { encodeUTF8 } from '../../simulations/utf8Encoder';
+import { encodeUTF8, encodeUTF8Steps } from '../../simulations/utf8Encoder';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
@@ -15,10 +15,23 @@ export default function CharExplorer() {
   useEffect(() => {
     if (inputChar) {
       try {
+        const cp = inputChar.codePointAt(0);
         const codes = charToAllCodes(inputChar);
         const asciiCat = getASCIICategory(codes.ascii?.decimal);
-        const utf8 = encodeUTF8(inputChar);
-        setData({ ...codes, asciiCat, utf8 });
+        const utf8Data = encodeUTF8(cp);
+        const utf8Steps = encodeUTF8Steps(cp);
+        
+        // Transform utf8Steps into format expected by ByteVisualizer
+        const visualizerBytes = [];
+        for (let i = 0; i < utf8Steps.byteCount; i++) {
+          visualizerBytes.push({
+            header: utf8Steps.headerBits[i].join(''),
+            payload: utf8Steps.payloadBits[i].join(''),
+            type: utf8Steps.byteCount === 1 ? 'ascii' : (i === 0 ? 'start' : 'cont')
+          });
+        }
+        
+        setData({ ...codes, asciiCat, utf8: utf8Data, visualizerBytes });
       } catch (e) {
         setData(null);
       }
@@ -101,8 +114,8 @@ export default function CharExplorer() {
 
           {/* UTF-8 Section */}
           <Card className="p-6 bg-white dark:bg-slate-900 md:col-span-2">
-            <h3 className="text-xl font-bold mb-4">UTF-8 Encoding ({data.utf8.length} byte{data.utf8.length > 1 ? 's' : ''})</h3>
-            <ByteVisualizer bytes={data.utf8} />
+            <h3 className="text-xl font-bold mb-4">UTF-8 Encoding ({data.utf8.byteCount} byte{data.utf8.byteCount > 1 ? 's' : ''})</h3>
+            <ByteVisualizer bytes={data.visualizerBytes} />
           </Card>
 
           {/* Flow Diagram */}

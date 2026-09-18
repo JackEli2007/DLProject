@@ -64,8 +64,11 @@ const ClockControl = ({
           type="range"
           min="1"
           max="10"
-          value={speed}
-          onChange={(e) => onSpeedChange(parseInt(e.target.value))}
+          value={Math.max(1, Math.min(10, Math.round(2000 / speed)))}
+          onChange={(e) => {
+            const val = parseInt(e.target.value);
+            onSpeedChange(Math.round(2000 / val));
+          }}
           className="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
           aria-label="Clock Speed"
         />

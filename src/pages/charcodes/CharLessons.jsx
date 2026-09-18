@@ -80,32 +80,36 @@ export default function CharLessons() {
 
         <Card className="p-6 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800">
           <div className="prose dark:prose-invert max-w-none">
-            {lesson.blocks?.map((block, idx) => {
+            {(lesson.content || []).map((block, idx) => {
               if (block.type === 'explain') {
-                return <p key={idx} className="text-lg mb-4">{block.content}</p>;
+                return (
+                  <div key={idx} className="mb-6">
+                    <h3 className="text-xl font-bold mb-2">{block.title}</h3>
+                    <p className="text-lg">{block.text}</p>
+                  </div>
+                );
               }
               if (block.type === 'keypoint') {
                 return (
                   <div key={idx} className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-4 mb-4 rounded-r">
                     <strong className="text-blue-700 dark:text-blue-300">Key Point: </strong>
-                    {block.content}
+                    {block.text}
                   </div>
                 );
               }
-              if (block.type === 'interact') {
+              if (block.type === 'interact' || block.type === 'practice') {
                 return (
-                  <div key={idx} className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg mb-4 text-center">
-                    <p className="mb-2 italic text-slate-600 dark:text-slate-400">{block.content}</p>
-                    <input 
-                      type="text" 
-                      maxLength={1} 
-                      placeholder="Try typing here..."
-                      className="text-2xl p-2 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 text-center w-24 mx-auto"
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (val) addToast(`ASCII Code: ${val.charCodeAt(0)}`, 'info');
-                      }}
-                    />
+                  <div key={idx} className="bg-slate-50 dark:bg-slate-800 p-6 rounded-lg mb-4 text-center border border-slate-200 dark:border-slate-700">
+                    <p className="mb-4 font-medium text-slate-700 dark:text-slate-300">Try It: {block.instruction}</p>
+                    <Button variant="outline" onClick={() => navigate('/lab/converter')}>Open Converter</Button>
+                  </div>
+                );
+              }
+              if (block.type === 'predict') {
+                return (
+                  <div key={idx} className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 p-4 rounded-lg mb-4">
+                    <p className="font-semibold text-amber-800 dark:text-amber-200 mb-2">Question:</p>
+                    <p className="text-amber-900 dark:text-amber-100">{block.question}</p>
                   </div>
                 );
               }

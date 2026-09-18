@@ -107,6 +107,27 @@ export default function Converter() {
             }
           />
           {error && <p className="text-red-500 mt-4 text-sm">{error}</p>}
+          
+          <div className="mt-6 flex flex-col items-center">
+            <span className="text-xs text-slate-500 mb-2">Live Examples (Click to test flow)</span>
+            <div className="flex flex-wrap justify-center gap-2">
+              {activeTab === 'character' && ['A', 'Z', '0', '9', '@', 'é', '中', '😀'].map(ex => (
+                <button key={ex} onClick={() => setInputValue(ex)} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-lg text-sm font-medium transition-colors">{ex}</button>
+              ))}
+              {activeTab === 'decimal' && ['65', '90', '48', '57', '64'].map(ex => (
+                <button key={ex} onClick={() => setInputValue(ex)} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-lg text-sm font-medium transition-colors">{ex}</button>
+              ))}
+              {activeTab === 'binary' && ['01000001', '01011010', '00110000', '00111001'].map(ex => (
+                <button key={ex} onClick={() => setInputValue(ex)} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-lg text-sm font-mono text-xs transition-colors">{ex}</button>
+              ))}
+              {activeTab === 'hex' && ['41', '5A', '30', '39', '40'].map(ex => (
+                <button key={ex} onClick={() => setInputValue(ex)} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-lg text-sm font-mono transition-colors">{ex}</button>
+              ))}
+              {activeTab === 'unicode' && ['0041', '00E9', '4E2D', '1F600'].map(ex => (
+                <button key={ex} onClick={() => setInputValue(ex)} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-lg text-sm font-mono transition-colors">U+{ex}</button>
+              ))}
+            </div>
+          </div>
         </div>
       </Card>
 

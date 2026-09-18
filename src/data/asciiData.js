@@ -17,28 +17,28 @@ export const asciiTable = Array.from({ length: 128 }, (_, i) => {
   let description = '';
 
   if (i < 32 || i === 127) {
-    category = 'control';
+    category = 'Control';
     char = ['NUL', 'SOH', 'STX', 'ETX', 'EOT', 'ENQ', 'ACK', 'BEL', 'BS', 'TAB', 'LF', 'VT', 'FF', 'CR', 'SO', 'SI', 'DLE', 'DC1', 'DC2', 'DC3', 'DC4', 'NAK', 'SYN', 'ETB', 'CAN', 'EM', 'SUB', 'ESC', 'FS', 'GS', 'RS', 'US'][i] || 'DEL';
     displayChar = '␀'; // Simplified for all controls
     description = char;
   } else if (i === 32) {
-    category = 'space';
+    category = 'Space';
     char = 'SPACE';
     displayChar = ' ';
     description = 'Space';
   } else if ((i >= 33 && i <= 47) || (i >= 58 && i <= 64) || (i >= 91 && i <= 96) || (i >= 123 && i <= 126)) {
-    category = 'symbol';
+    category = 'Symbol';
     description = 'Symbol or Punctuation';
   } else if (i >= 48 && i <= 57) {
-    category = 'digit';
+    category = 'Digit';
     description = `Digit ${char}`;
   } else if (i >= 65 && i <= 90) {
-    category = 'uppercase';
+    category = 'Uppercase';
     description = `Latin capital letter ${char}`;
   } else if (i >= 97 && i <= 122) {
-    category = 'lowercase';
+    category = 'Lowercase';
     description = `Latin small letter ${char}`;
   }
 
-  return { decimal: i, hex, binary, char, displayChar, category, description };
+  return { dec: i, hex, bin: binary, char, displayChar, category, description };
 });
